@@ -13,14 +13,13 @@ def main(args):
     model, feature_extractor, tokenizer = get_model(
         args.image_encoder_model,
         args.text_decoder_model,
-        args.max_length,
         args.saved_model_path,
     )
     processed_dataset = get_train_val_test_datasets_processed(
-        model.tokenizer,
-        model.feature_extractor,
-        model.model,
-        args.max_length,
+        tokenizer=tokenizer,
+        feature_extractor=feature_extractor,
+        model=model,
+        max_length=args.max_length,
         debug_amount=args.debug_amount,
     )
     training_args = Seq2SeqTrainingArguments(
@@ -35,7 +34,7 @@ def main(args):
     )
     trainer = Seq2SeqTrainer(
         model=model,
-        tokenizer=feature_extractor,
+        tokenizer=tokenizer,
         args=training_args,
         train_dataset=processed_dataset["train"],
         eval_dataset=processed_dataset["validation"],
@@ -70,10 +69,10 @@ if __name__ == "__main__":
         help="Amount of data for debugging (optional)",
     )
     parser.add_argument(
-        "--epochs", type=int, default=1, help="Number of epochs to train for"
+        "--epochs", type=int, default=50, help="Number of epochs to train for"
     )
-    parser.add_argument("--train_batch_size", type=int, default=1, help="Batch size")
-    parser.add_argument("--eval_batch_size", type=int, default=1, help="Batch size")
+    parser.add_argument("--train_batch_size", type=int, default=8, help="Batch size")
+    parser.add_argument("--eval_batch_size", type=int, default=8, help="Batch size")
 
     args = parser.parse_args()
 

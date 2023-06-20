@@ -1,6 +1,7 @@
 from datasets import load_dataset
 from pathlib import Path
 from transformers import AutoTokenizer
+from torchvision.transforms import ToTensor
 import numpy as np
 import torch
 from PIL import Image
@@ -72,22 +73,22 @@ def feature_extraction_fn(feature_extractor, image_paths, check_image=True):
     else:
         images = [Image.open(image_file) for image_file in image_paths]
     images = [img.resize((224, 224)) for img in images]
-    images = [img.convert("RGB") for img in images]
+    images = [ToTensor()(img.convert("RGB")) for img in images]
     encoder_inputs = feature_extractor(images=images, return_tensors="np")
 
     return encoder_inputs.pixel_values
 
 
-def preprocess_fn(examples, max_target_length, check_image=True):
+def preprocess_fn(examples, max_target_length, tokenizer, feature_extractor, check_image=True):
     """Run tokenization + image feature extraction"""
     image_paths = examples["img_path"]
     captions = examples["code"]
 
     model_inputs = {}
     # This contains image path column
-    model_inputs["labels"] = tokenization_fn(captions, max_target_length)
+    model_inputs["labels"] = tokenization_fn(tokenizer, captions, max_target_length)
     model_inputs["pixel_values"] = feature_extraction_fn(
-        image_paths, check_image=check_image
+        feature_extractor, image_paths, check_image=check_image
     )
 
     return model_inputs
@@ -97,10 +98,10 @@ def get_dataset(model, paths, tokenizer=None, feature_extractor=None):
     dataset = load_dataset("json", data_files=paths)
     dataset = dataset.map(lambda x: {"img_path": get_image_path(x["id"])})
 
-    if tokenizer is None and feature_extractor is None:
-        return dataset["train"]
-    else:
-        raise NotImplementedError
+    # if tokenizer is None and feature_extractor is None:
+    return dataset["train"]
+    # else:
+    #     raise NotImplementedError
 
 
 def get_train_val_test_paths(
@@ -142,9 +143,9 @@ def get_train_val_test_datasets(
         train_paths = train_paths[:debug_amount]
         val_paths = val_paths[:debug_amount]
         test_paths = test_paths[:debug_amount]
-    train_dataset = get_dataset(tokenizer, feature_extractor, model, train_paths)
-    val_dataset = get_dataset(tokenizer, feature_extractor, model, val_paths)
-    test_dataset = get_dataset(tokenizer, feature_extractor, model, test_paths)
+    train_dataset = get_dataset(tokenizer=tokenizer, feature_extractor=feature_extractor, model=model, paths=train_paths)
+    val_dataset = get_dataset(tokenizer=tokenizer, feature_extractor=feature_extractor, model=model, paths=val_paths)
+    test_dataset = get_dataset(tokenizer=tokenizer, feature_extractor=feature_extractor, model=model, paths=test_paths)
     return train_dataset, val_dataset, test_dataset
 
 
@@ -174,7 +175,7 @@ def get_train_val_test_datasets_processed(
     processed_dataset = dataset.map(
         function=preprocess_fn,
         batched=True,
-        fn_kwargs={"max_target_length": max_length},
+        fn_kwargs={"max_target_length": max_length, "tokenizer": tokenizer, "feature_extractor": feature_extractor},
         remove_columns=dataset["train"].column_names,
     )
     return processed_dataset
