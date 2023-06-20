@@ -74,6 +74,7 @@ def feature_extraction_fn(feature_extractor, image_paths, check_image=True):
         images = [Image.open(image_file) for image_file in image_paths]
     images = [img.resize((224, 224)) for img in images]
     images = [ToTensor()(img.convert("RGB")) for img in images]
+    images = torch.stack(images)
     encoder_inputs = feature_extractor(images=images, return_tensors="np")
 
     return encoder_inputs.pixel_values

@@ -69,10 +69,10 @@ if __name__ == "__main__":
         help="Amount of data for debugging (optional)",
     )
     parser.add_argument(
-        "--epochs", type=int, default=50, help="Number of epochs to train for"
+        "--epochs", type=int, default=1, help="Number of epochs to train for"
     )
-    parser.add_argument("--train_batch_size", type=int, default=8, help="Batch size")
-    parser.add_argument("--eval_batch_size", type=int, default=8, help="Batch size")
+    parser.add_argument("--train_batch_size", type=int, default=1, help="Batch size")
+    parser.add_argument("--eval_batch_size", type=int, default=1, help="Batch size")
 
     args = parser.parse_args()
 
