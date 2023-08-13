@@ -22,12 +22,11 @@ This project explores generating HTML code from input images using actor-critic 
 - Achieved mean htmlBLEU score of 0.78 compared to 0.31 for ViT and 0.64 for DiT
 - Robust performance even as sample complexity increases
 
-## Examples
+## Sample Visual Comparison
 
 Input Image | Ground Truth Code | Generated Code
 --- | --- | ---
-![Input](inputs/input1.png) | [gt_1.html](gt/gt_1.html) | [gen_1.html](gen/gen_1.html)
-![Input](inputs/input2.png) | [gt_2.html](gt/gt_2.html) | [gen_2.html](gen/gen_2.html)
+[Result Comparison](visual_metrics.png)
 
 ## References
 
