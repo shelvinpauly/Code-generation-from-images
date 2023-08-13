@@ -26,10 +26,11 @@ This project explores generating HTML code from input images using actor-critic 
 
 Input Image | Ground Truth Code | Generated Code
 --- | --- | ---
-[Result Comparison](visual_metrics.png)
+<p align="left"> 
+  <img width="500" height="300" src="visual_metrics.png">
 
 ## References
 
-[Full Project Report](report.pdf)
+[Full Project Report](CMSC828A_Project_Report.pdf)
 
 Let me know if you would like me to expand or modify this image to code generation README!
