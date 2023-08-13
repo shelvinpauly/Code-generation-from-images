@@ -10,6 +10,11 @@ This project explores generating HTML code from input images using actor-critic 
 - Actor trained to maximize rewards from critic's similarity estimates  
 - Custom htmlBLEU metric compares HTML DOM structure, CSS attributes between outputs
 
+## Model Architecture
+
+<p align="left"> 
+  <img src="model.png">
+
 ## Synthetic Dataset
 
 - 25,000 training samples of image + HTML code pairs 
@@ -22,15 +27,23 @@ This project explores generating HTML code from input images using actor-critic 
 - Achieved mean htmlBLEU score of 0.78 compared to 0.31 for ViT and 0.64 for DiT
 - Robust performance even as sample complexity increases
 
+
+<p align="left"> 
+  <img src="model_comparison.png">
+
+## Confusion Matrix
+
+
+<p align="left"> 
+  <img src="confusion_mat.png">
+
 ## Sample Visual Comparison
 
 Input Image | Ground Truth Code | Generated Code
 --- | --- | ---
 <p align="left"> 
-  <img width="500" height="300" src="visual_metrics.png">
+  <img src="visual_metrics.png">
 
 ## References
 
 [Full Project Report](CMSC828A_Project_Report.pdf)
-
-Let me know if you would like me to expand or modify this image to code generation README!
